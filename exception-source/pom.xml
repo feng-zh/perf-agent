@@ -13,25 +13,6 @@
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.2</version>
-				<executions>
-					<execution>
-						<id>boot-jar</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<phase>package</phase>
-						<configuration>
-							<classifier>boot</classifier>
-							<includes>
-								<include>**/shared/**</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>2.1</version>
 				<executions>
@@ -48,11 +29,17 @@
 									<shadedPattern>com.hp.ts.perf.agent.org.objectweb.asm</shadedPattern>
 								</relocation>
 							</relocations>
+							<artifactSet>
+								<includes>
+									<include>org.ow2.asm:*</include>
+								</includes>
+							</artifactSet>
 							<filters>
 								<filter>
 									<artifact>${project.groupId}:${project.artifactId}</artifact>
 									<excludes>
 										<exclude>**/shared/**</exclude>
+										<exclude>**/test/**</exclude>
 									</excludes>
 								</filter>
 							</filters>
@@ -67,6 +54,42 @@
 									</manifestEntries>
 								</transformer>
 							</transformers>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
+              				<shadedClassifierName>agent</shadedClassifierName>
+              				<finalName>${project.artifactId}-agent</finalName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>boot-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-boot-pom.xml</dependencyReducedPomLocation>
+							<relocations>
+								<relocation>
+									<pattern>com.strobel</pattern>
+									<shadedPattern>com.hp.ts.perf.agent.com.strobel</shadedPattern>
+								</relocation>
+							</relocations>
+							<artifactSet>
+								<includes>
+									<include>org.bitbucket.mstrobel:*</include>
+									<include>${project.groupId}:${project.artifactId}</include>
+								</includes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>${project.groupId}:${project.artifactId}</artifact>
+									<includes>
+										<include>**/shared/**</include>
+									</includes>
+								</filter>
+							</filters>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
+              				<shadedClassifierName>boot</shadedClassifierName>
+              				<finalName>${project.artifactId}-boot</finalName>
 						</configuration>
 					</execution>
 				</executions>
@@ -78,6 +101,11 @@
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-debug-all</artifactId>
 			<version>4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bitbucket.mstrobel</groupId>
+			<artifactId>procyon-compilertools</artifactId>
+			<version>0.4.2</version>
 		</dependency>
 	</dependencies>
 </project>

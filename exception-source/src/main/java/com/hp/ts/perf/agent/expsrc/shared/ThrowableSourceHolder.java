@@ -12,10 +12,13 @@ public class ThrowableSourceHolder {
 			StackTraceElement callTrace = stackTrace[0];
 			JavaSourceReader sourceReader = new JavaSourceReader(callTrace);
 			String code = sourceReader.loadCode();
-			return code;
-		} else {
-			return null;
+			if (code != null) {
+				return code;
+			}
+//			JavaClassReader classReader = new JavaClassReader(callTrace);
+//			return classReader.loadCode();
 		}
+		return null;
 	}
 
 	public static void enterPrintStackTrace() {
