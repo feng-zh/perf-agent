@@ -43,7 +43,12 @@ class JavaSourceReader {
 				// TODO debug
 				e.printStackTrace();
 			} finally {
-				close(jdkSrcZip);
+				if (jdkSrcZip != null) {
+					try {
+						jdkSrcZip.close();
+					} catch (IOException ignored) {
+					}
+				}
 			}
 		}
 		// try default file structure

@@ -22,6 +22,8 @@ public class TestMain {
 		System.out.println("start main");
 		try {
 			InnerClass.error();
+		} catch (Throwable th) {
+			th.printStackTrace(System.out);
 		} finally {
 			System.out.println("end main");
 		}
